@@ -8,8 +8,7 @@ from pathlib import Path
 import pytest
 
 from passlock.crypto import generate_salt
-from passlock.vault import (Vault, VaultEntry, create_empty_vault, load_vault,
-                            save_vault)
+from passlock.vault import Vault, VaultEntry, create_empty_vault, load_vault, save_vault
 
 
 @pytest.fixture

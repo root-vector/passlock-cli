@@ -2,8 +2,14 @@
 
 import pytest
 
-from passlock.crypto import (create_verifier, decrypt_data, derive_key,
-                             encrypt_data, generate_salt, verify_password)
+from passlock.crypto import (
+    create_verifier,
+    decrypt_data,
+    derive_key,
+    encrypt_data,
+    generate_salt,
+    verify_password,
+)
 
 
 def test_generate_salt():

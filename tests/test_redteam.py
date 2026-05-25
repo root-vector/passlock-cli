@@ -12,8 +12,7 @@ from hypothesis import given
 from hypothesis import strategies as st
 
 from passlock.crypto import create_verifier, generate_salt
-from passlock.vault import (Vault, VaultEntry, create_empty_vault, load_vault,
-                            save_vault)
+from passlock.vault import Vault, VaultEntry, create_empty_vault, load_vault, save_vault
 
 
 @pytest.fixture

@@ -12,9 +12,14 @@ from rich.console import Console
 from rich.table import Table
 
 from .crypto import create_verifier, generate_salt, verify_password
-from .utils import (atomic_write, copy_to_clipboard_with_timer,
-                    ensure_passlock_dir, get_salt_path, get_vault_path,
-                    get_verifier_path)
+from .utils import (
+    atomic_write,
+    copy_to_clipboard_with_timer,
+    ensure_passlock_dir,
+    get_salt_path,
+    get_vault_path,
+    get_verifier_path,
+)
 from .vault import VaultEntry, create_empty_vault, load_vault, save_vault
 
 app = typer.Typer(help="Secure local password manager")
