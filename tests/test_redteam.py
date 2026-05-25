@@ -150,6 +150,19 @@ def test_clipboard_leak(temp_vault_env, monkeypatch):
     vault.add_entry(VaultEntry("test.com", "user", "secret123", ""))
     save_vault(vault, password)
 
+    # Mock pyperclip to avoid clipboard dependency in CI
+    clipboard_content = {"value": None}
+
+    def mock_copy(text):
+        clipboard_content["value"] = text
+
+    def mock_paste():
+        return clipboard_content["value"] or ""
+
+    monkeypatch.setattr("pyperclip.copy", mock_copy)
+    monkeypatch.setattr("passlock.utils.pyperclip.copy", mock_copy)
+    monkeypatch.setattr("passlock.utils.pyperclip.paste", mock_paste)
+
     # Simulate get command copying to clipboard
     from passlock.utils import copy_to_clipboard_with_timer
 
@@ -157,14 +170,15 @@ def test_clipboard_leak(temp_vault_env, monkeypatch):
     copy_to_clipboard_with_timer(test_password, timeout=1)  # 1 second for testing
 
     # Verify password is in clipboard
-    assert pyperclip.paste() == test_password
+    assert clipboard_content["value"] == test_password
 
     # Wait for timeout + buffer
     time.sleep(2)
 
-    # Verify clipboard is cleared
-    clipboard_content = pyperclip.paste()
-    assert clipboard_content != test_password, "Clipboard not cleared after timeout"
+    # Verify clipboard is cleared (should be empty string or space)
+    clipboard_value = clipboard_content["value"]
+    assert clipboard_value != test_password, "Clipboard not cleared after timeout"
+    assert clipboard_value in ["", " "], f"Expected empty or space, got: {clipboard_value}"
 
 
 def test_memory_dump_simulation(temp_vault_env, caplog):
