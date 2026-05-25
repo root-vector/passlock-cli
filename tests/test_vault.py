@@ -170,6 +170,8 @@ def test_vault_from_dict():
 
 def test_create_and_load_vault(tmp_path, monkeypatch):
     """Test creating and loading encrypted vault."""
+    import os
+
     # Mock paths to use temp directory
     salt_path = tmp_path / "salt.bin"
     vault_path = tmp_path / "vault.enc"
@@ -180,6 +182,7 @@ def test_create_and_load_vault(tmp_path, monkeypatch):
     password = "test_password"
     salt = generate_salt()
     salt_path.write_bytes(salt)
+    os.chmod(salt_path, 0o600)  # Set secure permissions
 
     # Create empty vault
     create_empty_vault(password, salt)
@@ -193,6 +196,8 @@ def test_create_and_load_vault(tmp_path, monkeypatch):
 
 def test_save_and_load_vault_with_entries(tmp_path, monkeypatch):
     """Test saving and loading vault with entries."""
+    import os
+
     salt_path = tmp_path / "salt.bin"
     vault_path = tmp_path / "vault.enc"
 
@@ -202,6 +207,7 @@ def test_save_and_load_vault_with_entries(tmp_path, monkeypatch):
     password = "test_password"
     salt = generate_salt()
     salt_path.write_bytes(salt)
+    os.chmod(salt_path, 0o600)  # Set secure permissions
 
     # Create vault with entries
     vault = Vault()
@@ -227,6 +233,8 @@ def test_save_and_load_vault_with_entries(tmp_path, monkeypatch):
 
 def test_load_vault_wrong_password(tmp_path, monkeypatch):
     """Test loading vault with wrong password fails."""
+    import os
+
     salt_path = tmp_path / "salt.bin"
     vault_path = tmp_path / "vault.enc"
 
@@ -237,6 +245,7 @@ def test_load_vault_wrong_password(tmp_path, monkeypatch):
     wrong_password = "wrong_password"
     salt = generate_salt()
     salt_path.write_bytes(salt)
+    os.chmod(salt_path, 0o600)  # Set secure permissions
 
     create_empty_vault(password, salt)
 

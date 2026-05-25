@@ -40,16 +40,33 @@ def atomic_write(path: Path, data: bytes) -> None:
     Write data to file atomically with secure permissions.
 
     Uses a temporary file and atomic rename to prevent corruption.
-    Sets file mode to 0o600 (owner read/write only).
+    Sets file mode to 0o600 (owner read/write only) before writing.
     """
-    temp_path = path.with_suffix(path.suffix + ".tmp")
+    import tempfile
+
+    # Create temp file in same directory for atomic move
+    temp_fd, temp_path_str = tempfile.mkstemp(dir=path.parent, suffix=".tmp")
+    temp_path = Path(temp_path_str)
+
     try:
-        temp_path.write_bytes(data)
+        # Write data using file descriptor
+        with os.fdopen(temp_fd, "wb") as f:
+            f.write(data)
+
+        # Set secure permissions on temp file
         os.chmod(temp_path, 0o600)
-        temp_path.replace(path)
+
+        # Atomic move to final location
+        os.replace(temp_path, path)
+
+        # Ensure final file has correct permissions
+        os.chmod(path, 0o600)
     except Exception:
-        if temp_path.exists():
+        # Clean up temp file on error
+        try:
             temp_path.unlink()
+        except Exception:
+            pass
         raise
 
 

@@ -31,9 +31,11 @@ def temp_vault_env(tmp_path, monkeypatch):
     password = "test_password_123"
     salt = generate_salt()
     salt_path.write_bytes(salt)
+    os.chmod(salt_path, 0o600)  # Set secure permissions
 
     verifier = create_verifier(password)
     verifier_path.write_text(verifier)
+    os.chmod(verifier_path, 0o600)  # Set secure permissions
 
     create_empty_vault(password, salt)
 
@@ -344,6 +346,7 @@ def _test_fuzzing_impl(site, username, password, salt_path, vault_path, tmp_path
     master_password = "test_master"
     salt = generate_salt()
     salt_path.write_bytes(salt)
+    os.chmod(salt_path, 0o600)  # Set secure permissions
 
     create_empty_vault(master_password, salt)
 

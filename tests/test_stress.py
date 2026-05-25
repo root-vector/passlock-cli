@@ -23,6 +23,7 @@ def temp_vault_env(tmp_path, monkeypatch):
     password = "test_password_123"
     salt = generate_salt()
     salt_path.write_bytes(salt)
+    os.chmod(salt_path, 0o600)  # Set secure permissions
 
     create_empty_vault(password, salt)
 
