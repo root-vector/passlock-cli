@@ -162,7 +162,7 @@ passlock-cli/
 │   ├── crypto.py      # Argon2id + Fernet
 │   ├── vault.py       # Vault operations
 │   └── utils.py       # Helpers
-├── tests/             # Test suite (29 tests)
+├── tests/             # Test suite (46 tests)
 ├── docs/              # Documentation
 └── scripts/           # Helper scripts
 ```
